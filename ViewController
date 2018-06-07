@@ -1,0 +1,40 @@
+//
+//  ViewController.swift
+//  SQLiteDemo
+//
+//  Created by Rahul Patel on 6/7/18.
+//  Copyright © 2018 Rahul Patel. All rights reserved.
+//
+
+import UIKit
+import SQLite3
+
+class ViewController: UIViewController {
+    var db: OpaquePointer?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            .appendingPathComponent("Employee.db")
+     
+        if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
+            print("error opening database")
+        }
+        
+        //creating table
+        if sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS Employee (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, Designation TEXT)", nil, nil, nil) != SQLITE_OK {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("error creating table: \(errmsg)")
+        }
+      
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+
+}
+
+
